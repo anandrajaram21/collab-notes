@@ -20,10 +20,14 @@ interface UserInfo {
 
 export function CollaborativeEditor({ noteId }: CollaborativeEditorProps) {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  if (!process.env.NEXT_PUBLIC_HOCUSPOCUS_URL) {
+    throw new Error("NEXT_PUBLIC_HOCUSPOCUS_URL is not set");
+  }
+
   const [provider] = useState(
     () =>
       new HocuspocusProvider({
-        url: "ws://localhost:3001",
+        url: process.env.NEXT_PUBLIC_HOCUSPOCUS_URL!,
         name: noteId,
         token: noteId,
       })
