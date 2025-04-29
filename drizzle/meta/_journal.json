@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1745838546169,
+      "tag": "0000_exotic_inertia",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1745838720780,
+      "tag": "0001_green_shard",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1745839009461,
+      "tag": "0002_free_eddie_brock",
+      "breakpoints": true
+    }
+  ]
+}
