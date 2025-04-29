@@ -3,8 +3,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { verifyNotePassword } from "@/lib/server-actions";
 import { db } from "@/db";
-import { notes } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { CollaborativeEditor } from "@/components/collaborative-editor";
 
@@ -18,7 +16,8 @@ interface PageProps {
 }
 
 export default async function NotePage({ params, searchParams }: PageProps) {
-  const noteId = await Promise.resolve(params.id);
+  const paramsData = await params;
+  const noteId = await Promise.resolve(paramsData.id);
   const note = await db.query.notes.findFirst({
     where: (notes, { eq }) => eq(notes.id, noteId),
   });
@@ -27,7 +26,8 @@ export default async function NotePage({ params, searchParams }: PageProps) {
     notFound();
   }
 
-  const password = searchParams?.password;
+  const searchParamsData = await searchParams;
+  const password = searchParamsData?.password;
   const isValidPassword = password
     ? await verifyNotePassword(noteId, password)
     : false;
