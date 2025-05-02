@@ -6,6 +6,7 @@ import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import { HocuspocusProvider } from "@hocuspocus/provider";
 import { useEffect, useState } from "react";
 import { generateUserInfo } from "@/lib/server-actions";
+import Image from "next/image";
 
 interface CollaborativeEditorProps {
   noteId: string;
@@ -19,10 +20,14 @@ interface UserInfo {
 
 export function CollaborativeEditor({ noteId }: CollaborativeEditorProps) {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  if (!process.env.NEXT_PUBLIC_HOCUSPOCUS_URL) {
+    throw new Error("NEXT_PUBLIC_HOCUSPOCUS_URL is not set");
+  }
+
   const [provider] = useState(
     () =>
       new HocuspocusProvider({
-        url: "ws://localhost:3001",
+        url: process.env.NEXT_PUBLIC_HOCUSPOCUS_URL!,
         name: noteId,
         token: noteId,
       })
@@ -64,6 +69,7 @@ export function CollaborativeEditor({ noteId }: CollaborativeEditorProps) {
             "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none min-h-[500px] p-4",
         },
       },
+      immediatelyRender: false,
     },
     [userInfo]
   );
@@ -102,7 +108,7 @@ export function CollaborativeEditor({ noteId }: CollaborativeEditorProps) {
         }
       `}</style>
       <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
-        <img
+        <Image
           src={userInfo.avatarUrl}
           alt={userInfo.username}
           width={24}

@@ -1,56 +1,53 @@
-import { Hocuspocus } from '@hocuspocus/server';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { neon } from '@neondatabase/serverless';
-import * as schema from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { Hocuspocus } from "@hocuspocus/server";
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
+import * as schema from "../db/schema";
+import { eq } from "drizzle-orm";
+import { verifyNotePassword } from "../lib/server-actions";
 
 if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL is not set');
+  throw new Error("DATABASE_URL is not set");
 }
 
 if (!process.env.HOCUSPOCUS_SECRET) {
-  throw new Error('HOCUSPOCUS_SECRET is not set');
+  throw new Error("HOCUSPOCUS_SECRET is not set");
 }
 
 const db = drizzle({
-    client: neon(process.env.DATABASE_URL),
-    schema
+  client: neon(process.env.DATABASE_URL),
+  schema,
 });
 
 export const hocuspocus = new Hocuspocus({
   port: Number(process.env.HOCUSPOCUS_PORT) || 3001,
-  name: 'collab-notes',
+  name: "collab-notes",
   async onAuthenticate(data) {
     const { token, documentName } = data;
-    
-    // Verify the token and get note details
-    const note = await db.query.notes.findFirst({
-      where: (notes, { eq }) => eq(notes.id, documentName),
-    });
 
-    if (!note) {
-      throw new Error('Note not found');
+    const isValid = await verifyNotePassword(documentName, token);
+
+    if (!isValid) {
+      throw new Error("Invalid token");
     }
 
-    // In a real app, you would verify the token against the note's password
     return true;
   },
   async onLoadDocument(data) {
     const { documentName } = data;
-    
+
     const note = await db.query.notes.findFirst({
       where: (notes, { eq }) => eq(notes.id, documentName),
     });
 
     if (!note) {
-      throw new Error('Note not found');
+      throw new Error("Note not found");
     }
 
     return note.content;
   },
   async onStoreDocument(data) {
     const { documentName, document } = data;
-    
+
     await db
       .update(schema.notes)
       .set({
@@ -59,4 +56,4 @@ export const hocuspocus = new Hocuspocus({
       })
       .where(eq(schema.notes.id, documentName));
   },
-}); 
+});
