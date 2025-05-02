@@ -7,12 +7,12 @@ import { notFound } from "next/navigation";
 import { CollaborativeEditor } from "@/components/collaborative-editor";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     password?: string;
-  };
+  }>;
 }
 
 export default async function NotePage({ params, searchParams }: PageProps) {
