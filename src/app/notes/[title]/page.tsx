@@ -8,7 +8,7 @@ import { CollaborativeEditor } from "@/components/collaborative-editor";
 
 interface PageProps {
   params: Promise<{
-    id: string;
+    title: string;
   }>;
   searchParams: Promise<{
     password?: string;
@@ -17,9 +17,11 @@ interface PageProps {
 
 export default async function NotePage({ params, searchParams }: PageProps) {
   const paramsData = await params;
-  const noteId = await Promise.resolve(paramsData.id);
+  // Decode the title from the URL parameter
+const noteTitle = decodeURIComponent(paramsData.title as string);
   const note = await db.query.notes.findFirst({
-    where: (notes, { eq }) => eq(notes.id, noteId),
+    // Fetch by title
+    where: (notes, { eq }) => eq(notes.title, noteTitle),
   });
 
   if (!note) {
@@ -29,7 +31,8 @@ export default async function NotePage({ params, searchParams }: PageProps) {
   const searchParamsData = await searchParams;
   const password = searchParamsData?.password;
   const isValidPassword = password
-    ? await verifyNotePassword(noteId, password)
+    // Verify password using the title
+    ? await verifyNotePassword(noteTitle, password)
     : false;
 
   if (!isValidPassword) {
@@ -60,7 +63,8 @@ export default async function NotePage({ params, searchParams }: PageProps) {
       <div className="mb-4">
         <h1 className="text-2xl font-bold">{note.title}</h1>
       </div>
-      <CollaborativeEditor noteId={noteId} />
+      {/* Pass the actual note ID to the editor */}
+      <CollaborativeEditor noteTitle={note.title} password={password}/>
     </main>
   );
 }

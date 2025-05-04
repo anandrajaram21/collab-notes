@@ -14,25 +14,39 @@ export async function createNote(formData: FormData) {
   const password = formData.get("password") as string;
 
   if (!title || !password) {
+    // Consider returning an error message to the user instead of throwing
     throw new Error("Title and password are required");
   }
 
-  const passwordHash = await bcrypt.hash(password, 10);
-  const noteId = nanoid();
-
-  await db.insert(notes).values({
-    id: noteId,
-    title,
-    passwordHash,
-    content: "",
+  // Check if a note with this title already exists
+  const existingNote = await db.query.notes.findFirst({
+    where: (notes, { eq }) => eq(notes.title, title),
   });
 
-  redirect(`/notes/${noteId}`);
+  if (existingNote) {
+    // Handle duplicate title - maybe redirect back with an error?
+    // For now, let's throw an error
+    throw new Error(`Note with title "${title}" already exists.`);
+  }
+
+  const passwordHash = await bcrypt.hash(password, 10);
+  const noteId = nanoid(); // Keep using nanoid for the internal ID
+
+  await db.insert(notes).values({
+    id: noteId, // Still store the unique ID
+    title,
+    passwordHash,
+    content: "", // Initialize content
+  });
+
+  // Redirect using the title
+  redirect(`/notes/${encodeURIComponent(title)}`);
 }
 
-export async function verifyNotePassword(noteId: string, password: string) {
+export async function verifyNotePassword(noteTitle: string, password: string) {
   const note = await db.query.notes.findFirst({
-    where: (notes, { eq }) => eq(notes.id, noteId),
+    // Find by title instead of ID
+    where: (notes, { eq }) => eq(notes.title, noteTitle),
   });
 
   if (!note) {
@@ -61,4 +75,4 @@ export async function generateUserInfo() {
     username,
     avatarUrl: `data:image/svg+xml;base64,${Buffer.from(avatar.toString()).toString('base64')}`,
   };
-} 
+}

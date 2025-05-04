@@ -36,7 +36,7 @@ export const hocuspocus = new Hocuspocus({
     const { documentName } = data;
 
     const note = await db.query.notes.findFirst({
-      where: (notes, { eq }) => eq(notes.id, documentName),
+      where: (notes, { eq }) => eq(notes.title, documentName),
     });
 
     if (!note) {

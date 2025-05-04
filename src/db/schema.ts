@@ -2,7 +2,7 @@ import { pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 
 export const notes = pgTable('notes', {
   id: varchar('id', { length: 255 }).primaryKey(),
-  title: varchar('title', { length: 255 }).notNull(),
+  title: varchar('title', { length: 255 }).notNull().unique(),
   content: text('content').notNull().default(''),
   passwordHash: varchar('password_hash', { length: 255 }).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -16,4 +16,4 @@ export const connectedUsers = pgTable('connected_users', {
   username: varchar('username', { length: 255 }).notNull(),
   avatarUrl: varchar('avatar_url', { length: 255 }).notNull(),
   lastSeen: timestamp('last_seen').defaultNow().notNull(),
-}); 
+});

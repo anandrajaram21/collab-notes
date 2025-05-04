@@ -9,7 +9,8 @@ import { generateUserInfo } from "@/lib/server-actions";
 import Image from "next/image";
 
 interface CollaborativeEditorProps {
-  noteId: string;
+  noteTitle: string;
+  password?: string;
 }
 
 interface UserInfo {
@@ -18,7 +19,7 @@ interface UserInfo {
   avatarUrl: string;
 }
 
-export function CollaborativeEditor({ noteId }: CollaborativeEditorProps) {
+export function CollaborativeEditor({ noteTitle, password }: CollaborativeEditorProps) {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   if (!process.env.NEXT_PUBLIC_HOCUSPOCUS_URL) {
     throw new Error("NEXT_PUBLIC_HOCUSPOCUS_URL is not set");
@@ -28,8 +29,8 @@ export function CollaborativeEditor({ noteId }: CollaborativeEditorProps) {
     () =>
       new HocuspocusProvider({
         url: process.env.NEXT_PUBLIC_HOCUSPOCUS_URL!,
-        name: noteId,
-        token: noteId,
+        name: noteTitle,
+        token: password,
       })
   );
 
