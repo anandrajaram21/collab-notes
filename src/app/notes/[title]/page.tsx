@@ -5,6 +5,20 @@ import { verifyNotePassword } from "@/lib/server-actions";
 import { db } from "@/db";
 import { notFound } from "next/navigation";
 import { CollaborativeEditor } from "@/components/collaborative-editor";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const paramsData = await params;
+  const noteTitle = decodeURIComponent(paramsData.title as string);
+  return {
+    title: `${noteTitle} - Collaborative Notes`,
+    openGraph: {
+      title: `${noteTitle} - Collaborative Notes`,
+    },
+  };
+}
 
 interface PageProps {
   params: Promise<{
@@ -43,6 +57,7 @@ export default async function NotePage({ params, searchParams }: PageProps) {
             <CardTitle className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900">
               {note.title}
             </CardTitle>
+            <meta name="robots" content="noindex,nofollow" />
             <p className="text-center text-gray-600 text-lg">
               Enter password to access this note
             </p>

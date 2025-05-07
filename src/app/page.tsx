@@ -27,6 +27,14 @@ function CreateNoteSubmitButton() {
   );
 }
 
+export async function generateMetadata() {
+  return {
+    title: "Collaborative Notes",
+    description:
+      "Create and share notes seamlessly with real-time collaboration",
+  };
+}
+
 export default function Home() {
   const router = useRouter();
   const [viewNoteTitle, setViewNoteTitle] = useState("");
