@@ -9,13 +9,12 @@ import { generate } from "random-words";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 
-export async function createNote(formData: FormData) {
+export async function createNote(prevState: any, formData: FormData): Promise<{ error?: string; success?: boolean; title?: string }> {
   const title = formData.get("title") as string;
   const password = formData.get("password") as string;
 
   if (!title || !password) {
-    // Consider returning an error message to the user instead of throwing
-    throw new Error("Title and password are required");
+    return { error: "Title and password are required" };
   }
 
   // Check if a note with this title already exists
@@ -24,9 +23,7 @@ export async function createNote(formData: FormData) {
   });
 
   if (existingNote) {
-    // Handle duplicate title - maybe redirect back with an error?
-    // For now, let's throw an error
-    throw new Error(`Note with title "${title}" already exists.`);
+    return { error: `Note with title "${title}" already exists.` };
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
@@ -39,8 +36,24 @@ export async function createNote(formData: FormData) {
     content: "", // Initialize content
   });
 
-  // Redirect using the title
-  redirect(`/notes/${encodeURIComponent(title)}`);
+  // Instead of redirecting, return success and title for client-side navigation
+  return { success: true, title: encodeURIComponent(title) };
+}
+
+export async function checkNoteExistsByTitle(title: string): Promise<{ exists: boolean; error?: string }> {
+  "use server";
+  if (!title) {
+    return { exists: false, error: "Title is required" };
+  }
+  try {
+    const existingNote = await db.query.notes.findFirst({
+      where: (notes, { eq }) => eq(notes.title, title),
+    });
+    return { exists: !!existingNote };
+  } catch (e) {
+    console.error("Error checking note existence:", e);
+    return { exists: false, error: "Failed to check note existence." };
+  }
 }
 
 export async function verifyNotePassword(noteTitle: string, password: string) {
