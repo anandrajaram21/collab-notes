@@ -18,7 +18,6 @@
     "@dicebear/core": "^9.2.2",
     "@hocuspocus/provider": "^2.15.2",
     "@hocuspocus/server": "^2.15.2",
-    "@neondatabase/serverless": "^1.0.0",
     "@radix-ui/react-slot": "^1.2.0",
     "@tiptap/extension-collaboration": "^2.11.7",
     "@tiptap/extension-collaboration-cursor": "^2.11.7",
@@ -34,6 +33,8 @@
     "lucide-react": "^0.503.0",
     "nanoid": "^5.1.5",
     "next": "15.3.1",
+    "pg": "^8.16.0",
+    "postgres": "^3.4.5",
     "random-words": "^2.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -44,14 +45,16 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.15.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "drizzle-kit": "^0.31.0",
+    "drizzle-kit": "^0.31.1",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
     "tailwindcss": "^4",
     "tsx": "^4.19.3",
     "tw-animate-css": "^1.2.8",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

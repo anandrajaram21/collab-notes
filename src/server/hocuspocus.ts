@@ -1,6 +1,5 @@
 import { Hocuspocus } from "@hocuspocus/server";
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "../db/schema";
 import { eq } from "drizzle-orm";
 import { verifyNotePassword } from "../lib/server-actions";
@@ -13,10 +12,7 @@ if (!process.env.HOCUSPOCUS_SECRET) {
   throw new Error("HOCUSPOCUS_SECRET is not set");
 }
 
-const db = drizzle({
-  client: neon(process.env.DATABASE_URL),
-  schema,
-});
+const db = drizzle(process.env.DATABASE_URL, { schema });
 
 export const hocuspocus = new Hocuspocus({
   port: Number(process.env.HOCUSPOCUS_PORT) || 3001,

@@ -1,0 +1,23 @@
+# Use the official Bun image as the base
+# See all versions at https://hub.docker.com/r/oven/bun/tags
+FROM oven/bun:1 AS base
+
+# Set the working directory inside the container
+WORKDIR /usr/src/app
+
+COPY package.json bun.lock ./
+
+RUN bun install --frozen-lockfile
+
+COPY . .
+
+# Set the user to 'bun' for security best practices
+USER bun
+
+EXPOSE 3001/tcp
+
+ENV DATABASE_URL postgres://postgres:postgres@postgres:5432/collab_notes
+ENV HOCUSPOCUS_PORT 3001
+ENV HOCUSPOCUS_SECRET secretkey
+
+ENTRYPOINT [ "bun", "run", "server" ]

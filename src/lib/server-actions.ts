@@ -1,4 +1,4 @@
-'use server';
+"use server";
 
 import { db } from "@/db";
 import { notes } from "@/db/schema";
@@ -6,10 +6,12 @@ import { nanoid } from "nanoid";
 import { createAvatar } from "@dicebear/core";
 import { adventurerNeutral } from "@dicebear/collection";
 import { generate } from "random-words";
-import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 
-export async function createNote(prevState: any, formData: FormData): Promise<{ error?: string; success?: boolean; title?: string }> {
+export async function createNote(
+  prevState: unknown,
+  formData: FormData
+): Promise<{ error?: string; success?: boolean; title?: string }> {
   const title = formData.get("title") as string;
   const password = formData.get("password") as string;
 
@@ -40,7 +42,9 @@ export async function createNote(prevState: any, formData: FormData): Promise<{ 
   return { success: true, title: encodeURIComponent(title) };
 }
 
-export async function checkNoteExistsByTitle(title: string): Promise<{ exists: boolean; error?: string }> {
+export async function checkNoteExistsByTitle(
+  title: string
+): Promise<{ exists: boolean; error?: string }> {
   "use server";
   if (!title) {
     return { exists: false, error: "Title is required" };
@@ -78,14 +82,16 @@ export async function generateUserInfo() {
   const words = generate({
     exactly: 2,
     wordsPerString: 1,
-    separator: '-'
+    separator: "-",
   }) as string[];
 
-  const username = words.join('-');
+  const username = words.join("-");
 
   return {
     userId: nanoid(),
     username,
-    avatarUrl: `data:image/svg+xml;base64,${Buffer.from(avatar.toString()).toString('base64')}`,
+    avatarUrl: `data:image/svg+xml;base64,${Buffer.from(
+      avatar.toString()
+    ).toString("base64")}`,
   };
 }

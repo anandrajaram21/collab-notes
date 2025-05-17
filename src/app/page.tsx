@@ -27,14 +27,6 @@ function CreateNoteSubmitButton() {
   );
 }
 
-export async function generateMetadata() {
-  return {
-    title: "Collaborative Notes",
-    description:
-      "Create and share notes seamlessly with real-time collaboration",
-  };
-}
-
 export default function Home() {
   const router = useRouter();
   const [viewNoteTitle, setViewNoteTitle] = useState("");
@@ -134,7 +126,7 @@ export default function Home() {
                           • Titles are case-sensitive
                         </li>
                         <li className="flex items-center gap-2">
-                          • You'll need the note's password to edit
+                          • You&apos;ll need the note&apos;s password to edit
                         </li>
                       </ul>
                     </div>

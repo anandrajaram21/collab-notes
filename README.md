@@ -14,7 +14,7 @@ A real-time collaborative note-taking application built with Next.js, Tiptap, an
 
 - Next.js
 - Drizzle ORM
-- PostgreSQL (Neon)
+- PostgreSQL
 - Hocuspocus for Tiptap
 - Dicebear for avatars
 - shadcn/ui for components
@@ -36,7 +36,7 @@ A real-time collaborative note-taking application built with Next.js, Tiptap, an
 
 4. Set up your database:
 
-   - Create a Neon PostgreSQL database
+   - Create a PostgreSQL database
    - Update the `DATABASE_URL` in your `.env` file
 
 5. Run the development server:
@@ -52,7 +52,7 @@ A real-time collaborative note-taking application built with Next.js, Tiptap, an
 
 ## Environment Variables
 
-- `DATABASE_URL`: Your Neon PostgreSQL connection string
+- `DATABASE_URL`: Your PostgreSQL connection string
 - `HOCUSPOCUS_PORT`: Port for the Hocuspocus server (default: 3001)
 - `HOCUSPOCUS_SECRET`: Secret key for Hocuspocus
 - `NEXT_PUBLIC_APP_URL`: Your application URL (default: http://localhost:3000)
